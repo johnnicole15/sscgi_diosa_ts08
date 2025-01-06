@@ -62,3 +62,29 @@ function declaredFunction(){
         console.log("re-assigned!");
     }
     constFunc();
+
+// Parameters and Arguments
+    function printName(name){
+        console.log("My name is "+ name);
+    }
+
+    printName("John"); //"John" - Argument
+    
+    // "name" is called a parameter
+    // A parameter acts as a named variable
+    // containers that exists only inside of a function
+    // it is used to store information that is provided to a function when it is called/invoked
+    // An argument is a value passed when invoking a function, this argument is then stored as the parameters within a function.
+    printName("hilda");
+    printName("Yui", 12)
+
+    function argumentFunction(name){
+        console.log("This function was passed as an argument before the message was printed. " + name)
+    }
+
+    function invokeFunction(argumentFunction){
+        argumentFunction("Hello");
+    }
+
+    invokeFunction(argumentFunction);
+    //console.log(argumentFunction);
