@@ -152,7 +152,7 @@ class ElectricPokemon extends Pokemon {
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
         );
       }
     }else{
@@ -217,7 +217,7 @@ class FirePokemon extends Pokemon {
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
         );
       }
     }else{
@@ -281,7 +281,7 @@ class LeafPokemon extends Pokemon {
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
         );
       }
     }else{
@@ -345,7 +345,7 @@ class WaterPokemon extends Pokemon {
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
         );
       }
     }else{
