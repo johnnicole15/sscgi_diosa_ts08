@@ -1,3 +1,4 @@
+//Base pokemon class
 class Pokemon {
   constructor(name, type, level, hp, defense) {
     this.name = name;
@@ -9,42 +10,44 @@ class Pokemon {
     this.defense = defense;
     this.maxDefense = defense;
   }
-
+  //attack method - to log attack direction.
   attack(opponent) {
     console.log(
       `${this.trainer.name} ${this.name} attack ${opponent.name} with ${opponent.trainer.name} ${opponent.hp} health!`
     );
   }
-
+  //receiveDamage method - to calculate the damage from the opponent
   receiveDamage(damage) {
-    this.hp -= damage - this.defense;
+    this.hp -= damage - this.defense; //setting hp to the actual damage given by the opponent but negating the damage with this pokemons defense
     console.log(
       `${this.trainer.name} lvl ${this.level} ${this.name} received -${damage} Damage and ${this.name} defense negating ${this.defense} Damage: ${this.hp}/${this.maxHp} HP`
     );
     if (this.hp <= 0) {
-      console.log(`${this.trainer.name} ${this.name} has fainted!`);
+      console.log(`${this.trainer.name} ${this.name} has fainted!`); // checking if pokemon died after receiving the damage
     }
     if (this.defense > this.maxDefense) {
-      this.defense = this.maxDefense;
+      this.defense = this.maxDefense; // checking if this pokemon aquires a defense boost after healing, then setting it to the original defense after taking a damage
     }
   }
+  // heal method - adding appopriate amount of health base on pokemon health condition
   heal() {
     if (this.defense == this.maxDefense) {
-      this.defense += 2;
+      this.defense += 2; // adding a 2 defense boost to this pokemon
     }
-    if (this.hp == this.maxHp) {
+    
+    if (this.hp == this.maxHp) { // checking if pokemons health is already full, then this heal will not reflect instead it only gives the defense boost of 2.
       this.hp = this.maxHp;
       console.log(
         `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
       );
-    } else if ((this.hp + 3) > this.maxHp) {
+    } else if ((this.hp + 3) > this.maxHp) { // checking if the heal exceeds the max health.
       console.log(
         `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
           this.maxHp
         }, but receives 2 defense`
       );
       this.hp = this.maxHp;
-    } else {
+    } else { // healing this pokemon with 3 health and giving a defense boost of 3
       this.hp += 3;
       console.log(
         `${this.name} heals for 3hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
@@ -106,7 +109,7 @@ class ElectricPokemon extends Pokemon {
     if (getRandom > 2) {
       this.attack(opponent);
     } else {
-      console.log(`${this.trainer.name} decided to use heal on lvl ${this.level} ${this.name}`);
+      console.log(`%c \u{1F60E} ${this.trainer.name} decided to use heal on lvl ${this.level} ${this.name}`,'background: gray; margin: 5px 15px;');
       this.heal();
     }
   }
@@ -594,9 +597,9 @@ class Tournament {
     this.#firstMatch = [this.#challengers[0], this.#challengers[1]];
     this.#secondMatch = [this.#challengers[2], this.#challengers[3]];
 
-    console.log(`First Match is between ${this.#firstMatch[0].name} and ${this.#firstMatch[1].name}`);
-    console.log(`Second Match is between ${this.#secondMatch[0].name} and ${this.#secondMatch[1].name}`);
-    console.log(`The Depending Champion is ${this.#champion.name}`);
+    console.log(`%c First Match is between ${this.#firstMatch[0].name} and ${this.#firstMatch[1].name} `,'width: 600px;margin-left: 26%;margin-right: 26%;background: grey;padding: 10px 0px;');
+    console.log(`%c Second Match is between ${this.#secondMatch[0].name} and ${this.#secondMatch[1].name} `,'margin-left: 26%;margin-right: 26%;background: grey; padding: 10px 0px;');
+    console.log(`%c The Depending Champion is ${this.#champion.name} `,'margin-left: 26%;margin-right: 26%;background: grey;padding: 10px 0px; width: 35%;');
     console.log("%c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", "color: red;");
   }
   startTournament() {
