@@ -1,3 +1,15 @@
+function userPrompt(promptMessage, promptDefaultText,constraintMin, constraintMax){
+  let result = parseInt(prompt(promptMessage,promptDefaultText));
+  
+  try {
+    if (result < constraintMin || result) {
+      
+    }
+  } catch (error) {
+    
+  }
+}
+
 //creating pokemon class
 class Pokemon {
   constructor(name, type, damage, hp, defense, speed, evasiveness, level) {
@@ -91,7 +103,7 @@ class Pokemon {
   }
   //end of calculateDamage() method
 }
-//err
+//checking if Pokemon Class methods are working as intended
 let a = new Pokemon("Pikachu", "Electric", 1, 9, 1, 3, 2, 1);
 let b = new Pokemon("Charmander", "Fire", 1, 9, 1, 3, 3, 1);
 
@@ -126,3 +138,276 @@ class Trainer {
   }
 }
 //end of Trainer Class
+
+//creating pokemon subclasses
+
+//creating ElectricPokemon subclass
+class ElectricPokemon extends Pokemon {
+  constructor(name, level, hp, defense) {
+    // calling the base class constructor
+    super(name, "Electric", level, hp, defense);
+  }
+  nextAction(opponent) {
+    let getRandom = Math.floor(Math.random() * 8);
+    if (getRandom > 2) {
+      this.attack(opponent);
+    } else {
+      console.log(`%c \u{1F60E} ${this.trainer.name} decided to use heal on lvl ${this.level} ${this.name}`,'background: gray; margin: 5px 15px;');
+      this.heal();
+    }
+  }
+  attack(opponent) {
+    console.log(
+      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`
+    );
+    opponent.receiveDamage(this.calculateDamage());
+  }
+  calculateDamage() {
+    if (this.level % 5 == 0) {
+      console.log(
+        `${this.trainer.name} ${this.name} uses` + " %c ThunderBolt! ",
+        "color: yellow; background: black"
+      );
+
+      this.level += 2;
+      return this.level * 3;
+    } else {
+      console.log(`${this.trainer.name} ${this.name} uses Quick Attack!`);
+
+      this.level += 2;
+      return super.calculateDamage();
+    }
+  }
+  heal() {
+    if (this.defense == this.maxDefense) {
+      this.defense += 2;
+    }
+    if (this.level % 5 == 0) {
+      if ((this.hp) == this.maxHp) {
+        this.hp = this.maxHp;
+        console.log(
+          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+        );
+      } else if ((this.hp + 5) > this.maxHp) {
+        console.log(
+          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+            this.maxHp
+          }, but receives 2 defense`
+        );
+        this.hp = this.maxHp;
+      } else {
+        this.hp += 5;
+        console.log(
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+        );
+      }
+    }else{
+      super.heal();
+    }
+    
+  }
+}
+//end of ElectricPokemon subclass
+
+//creating FirePokemon subclass
+class FirePokemon extends Pokemon {
+  constructor(name, level, hp, defense) {
+    // calling the base class constructor
+    super(name, "Fire", level, hp, defense);
+  }
+  nextAction(opponent) {
+    let getRandom = Math.floor(Math.random() * 8);
+    if (getRandom > 2) {
+      this.attack(opponent);
+    } else {
+      console.log(`${this.name} decided to use heal`);
+      this.heal();
+    }
+  }
+  attack(opponent) {
+    console.log(
+      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+    );
+    opponent.receiveDamage(this.calculateDamage());
+  }
+  calculateDamage() {
+    if (this.level % 5 == 0) {
+      console.log(
+        `${this.trainer.name} ${this.name} uses` + " %c Flame Thower! ",
+        "color: Orange; background: black"
+      );
+
+      this.level += 2;
+      return this.level * 3;
+    } else {
+      console.log(`${this.trainer.name} ${this.name} uses Ember!`);
+
+      this.level += 2;
+      return super.calculateDamage();
+    }
+  }
+  heal() {
+    if (this.defense == this.maxDefense) {
+      this.defense += 2;
+    }
+    if (this.level % 5 == 0) {
+      if ((this.hp) == this.maxHp) {
+        this.hp = this.maxHp;
+        console.log(
+          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+        );
+      } else if ((this.hp + 5) > this.maxHp) {
+        console.log(
+          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+            this.maxHp
+          }, but receives 2 defense`
+        );
+        this.hp = this.maxHp;
+      } else {
+        this.hp += 5;
+        console.log(
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+        );
+      }
+    }else{
+      super.heal();
+    }
+  }
+}
+//end of FirePokemon subclass
+
+//creating LeafPokemon subclass
+class LeafPokemon extends Pokemon {
+  constructor(name, level, hp, defense) {
+    // calling the base class constructor
+    super(name, "Fire", level, hp, defense);
+  }
+  nextAction(opponent) {
+    let getRandom = Math.floor(Math.random() * 8);
+    if (getRandom > 2) {
+      this.attack(opponent);
+    } else {
+      console.log(`${this.name} decided to use heal`);
+      this.heal();
+    }
+  }
+  attack(opponent) {
+    console.log(
+      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+    );
+    opponent.receiveDamage(this.calculateDamage());
+  }
+  calculateDamage() {
+    if (this.level % 5 == 0) {
+      console.log(
+        `${this.trainer.name} ${this.name} uses` + " %c Leaf Storm! ",
+        "color: Green; background: black"
+      );
+
+      this.level += 2;
+      return this.level * 3;
+    } else {
+      console.log(`${this.trainer.name} ${this.name} uses Vine Whip!`);
+
+      this.level += 2;
+      return super.calculateDamage();
+    }
+  }
+  heal() {
+    if (this.defense == this.maxDefense) {
+      this.defense += 2;
+    }
+    if (this.level % 5 == 0) {
+      if ((this.hp) == this.maxHp) {
+        console.log(
+          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+        );
+        this.hp = this.maxHp;
+      } else if ((this.hp + 5) > this.maxHp) {
+        this.hp = this.maxHp;
+        console.log(
+          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+            this.maxHp
+          }, but receives 2 defense`
+        );
+      } else {
+        this.hp += 5;
+        console.log(
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+        );
+      }
+    }else{
+      super.heal();
+    }
+  }
+}
+//end of LeafPokemon subclass
+
+//creating WaterPokemon subclass
+class WaterPokemon extends Pokemon {
+  constructor(name, level, hp, defense) {
+    // calling the base class constructor
+    super(name, "Fire", level, hp, defense);
+  }
+  nextAction(opponent) {
+    let getRandom = Math.floor(Math.random() * 8);
+    if (getRandom > 2) {
+      this.attack(opponent);
+    } else {
+      console.log(`${this.name} decided to use heal`);
+      this.heal();
+    }
+  }
+  attack(opponent) {
+    console.log(
+      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+    );
+    opponent.receiveDamage(this.calculateDamage());
+  }
+  calculateDamage() {
+    if (this.level % 5 == 0) {
+      console.log(
+        `${this.trainer.name} ${this.name} uses` + " %c Hydro Pump! ",
+        "color: blue; background: black"
+      );
+
+      this.level += 2;
+      return this.level * 3;
+    } else {
+      console.log(`${this.trainer.name} ${this.name} uses Bubbles!`);
+
+      this.level += 2;
+      return super.calculateDamage();
+    }
+  }
+  heal() {
+    if (this.defense == this.maxDefense) {
+      this.defense += 2;
+    }
+    if (this.level % 5 == 0) {
+      if ((this.hp) == this.maxHp) {
+        this.hp = this.maxHp;
+        console.log(
+          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+        );
+      } else if ((this.hp + 5) > this.maxHp) {
+        console.log(
+          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+            this.maxHp
+          }, but receives 2 defense`
+        );
+        this.hp = this.maxHp;
+      } else {
+        this.hp += 5;
+        console.log(
+          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+        );
+      }
+    }else{
+      super.heal();
+    }
+  }
+}
+//end of WaterPokemon subclass
+
+//end of creating sub classes
