@@ -148,8 +148,29 @@ const brock = new Trainer('Brock');
 const red = new Trainer('Red');
 const may = new Trainer('May');
 const ethan = new Trainer('Ethan');
-console.log(ash,brock,red,may,ethan);
+//console.log(ash,brock,red,may,ethan);
 //end of trainer objects
+
+
+//start setup tournament bracket stage
+
+//creating shuffle trainer for tournament
+let trainers = [ash,brock,red,may,ethan];
+const shuffleChallengers = function (challengers) {
+  for (let i = 3; i > 0; i--) {
+    let moveChallenger = Math.floor(Math.random() * 3);
+    [challengers[i], challengers[moveChallenger]] = [
+      challengers[moveChallenger],
+      challengers[i],
+    ];
+  }
+  return challengers;
+};
+console.log(shuffleChallengers(trainers));
+//end of trainer shuffle for tournament
+
+//
+//end of setup tournament bracket stage
 
 //creating pokemon subclasses
 
