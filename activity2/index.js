@@ -9,9 +9,9 @@ function userPrompt(promptMessage, entity, promptDefaultText,constraintMin, cons
   return result;
 }
 
-let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
-let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
-console.log(numberOfTrainers," ", numberOfPokemon);
+// let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
+// let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
+// console.log(numberOfTrainers," ", numberOfPokemon);
 
 //creating pokemon class
 class Pokemon {
@@ -141,6 +141,15 @@ class Trainer {
   }
 }
 //end of Trainer Class
+
+//creating trainer objects
+const ash = new Trainer('Ash');
+const brock = new Trainer('Brock');
+const red = new Trainer('Red');
+const may = new Trainer('May');
+const ethan = new Trainer('Ethan');
+console.log(ash,brock,red,may,ethan);
+//end of trainer objects
 
 //creating pokemon subclasses
 
