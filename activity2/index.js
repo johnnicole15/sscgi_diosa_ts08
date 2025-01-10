@@ -15,77 +15,60 @@ let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
 
 //creating pokemon class
 class Pokemon {
-  constructor(name, type, damage, hp, defense, speed, evasiveness, level) {
+  constructor(name, type, level, hp, defense) {
     this.name = name;
     this.type = type;
-    this.damage = damage;
+    this.level = level;
+    this.baseLevel = level;
     this.hp = hp;
     this.maxHp = hp;
     this.defense = defense;
     this.maxDefense = defense;
-    this.speed = speed;
-    this.evasiveness = evasiveness;
-    this.level = level;
   }
-  //attack() method - to log attack direction.
+  //attack method - to log attack direction.
   attack(opponent) {
     console.log(
-      `%c level${this.level}%c ${this.name} attack%c level${opponent.level}%c ${opponent.name}`,
-      "font-size: 10px;",
-      "",
-      "font-size: 10px;",
-      ""
+      `${this.name} attack ${opponent.name} with ${opponent.hp} health!`
     );
   }
-  //end of attack() method
-
-  //receiveDamage() method - to calculate the damage from the opponent
+  //receiveDamage method - to calculate the damage from the opponent
   receiveDamage(damage) {
     this.hp -= damage - this.defense; //setting hp to the actual damage given by the opponent but negating the damage with this pokemons defense
     console.log(
-      `lvl ${this.level} ${this.name} received -${damage} Damage and ${this.name} defense negating ${this.defense} Damage: %c${this.hp}%c/${this.maxHp} HP`,
-      "vertical-align: super; color: red;",
-      ""
+      `lvl ${this.level} ${this.name} received -${damage} Damage and ${this.name} defense negating ${this.defense} Damage: ${this.hp}/${this.maxHp} HP`
     );
     if (this.hp <= 0) {
-      console.log(` ${this.name} has fainted!`); // checking if pokemon died
+      console.log(`${this.trainer.name} ${this.name} has fainted!`); // checking if pokemon died after receiving the damage
     }
     if (this.defense > this.maxDefense) {
       this.defense = this.maxDefense; // checking if this pokemon aquires a defense boost after healing, then setting it to the original defense after taking a damage
     }
   }
-  //end of receivedDamage() method
-  //heal() method
+  // heal method - adding appopriate amount of health base on pokemon health condition
   heal() {
     if (this.defense == this.maxDefense) {
       this.defense += 2; // adding a 2 defense boost to this pokemon
     }
-
-    if (this.hp == this.maxHp) {
-      // checking if pokemons health is already full, then this heal will not reflect instead it only gives the defense boost of 2.
+    
+    if (this.hp == this.maxHp) { // checking if pokemons health is already full, then this heal will not reflect instead it only gives the defense boost of 2.
       this.hp = this.maxHp;
       console.log(
         `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
       );
-    } else if (this.hp + 3 > this.maxHp) {
-      // checking if the heal exceeds the max health.
-      this.hp = this.maxHp;
+    } else if ((this.hp + 3) > this.maxHp) { // checking if the heal exceeds the max health.
       console.log(
-        `${this.name} heals for full health: %c${this.hp}%c/${this.maxHp}, and receives 2 defense`,
-        "color: lawngreen;",
-        ""
+        `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+          this.maxHp
+        }, but receives 2 defense`
       );
-    } else {
-      // healing this pokemon with 3 health and giving a defense boost of 3
+      this.hp = this.maxHp;
+    } else { // healing this pokemon with 3 health and giving a defense boost of 3
       this.hp += 3;
       console.log(
         `${this.name} heals for 3hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
       );
     }
   }
-  //end of heal() method
-
-  //calculateDamage() method
   calculateDamage() {
     let critical = Math.floor(Math.random(), 10);
     let damageMultiplyer = 0;
@@ -101,11 +84,11 @@ class Pokemon {
     }
     return damageMultiplyer;
   }
-  resetPokemonLevel() {
+  resetPokemonLevel(){
     this.level = this.baseLevel;
   }
-  //end of calculateDamage() method
 }
+
 //checking if Pokemon Class methods are working as intended
 let a = new Pokemon("Pikachu", "Electric", 1, 9, 1, 3, 2, 1);
 let b = new Pokemon("Charmander", "Fire", 1, 9, 1, 3, 3, 1);
@@ -123,7 +106,7 @@ class Trainer {
     this.pokemonList = [];
   }
   addPokemon(pokemon) {
-    pokemon.trainer = this.name;
+    pokemon.trainer = this;
     this.pokemonList.push(pokemon);
   }
   selectPokemon(index) {
@@ -554,5 +537,112 @@ for (let x = 0; x < numberOfTrainers; x++) {
     }
   }
 }
-// console.log(challengers);
+console.log(challengers);
 //end of trainer shuffle for tournament
+
+//start of bracket class
+class Bracket{
+  constructor(trainer1,trainer2){
+    this.trainer1 = trainer1;
+    this.trainer2 = trainer2;
+  }
+  #commenceBattle(){
+    let battle = new Battle(this.trainer1,this.trainer2);
+    let winner = battle.startBattle();
+    battle.resetWinnersPokemon(winner);
+    return winner;
+  }
+  getWinner(){
+    return this.#commenceBattle();
+  }
+}
+//end of bracket class
+
+//start of battle class
+
+class Battle {
+  constructor(trainer1, trainer2) {
+    this.trainer1 = trainer1;
+    this.trainer2 = trainer2;
+  }
+  startBattle() {
+    console.log(
+      `The battle between ${this.trainer1.name} and ${this.trainer2.name} has begun`
+    );
+    console.log("-----------------------------------------------------------");
+
+    let trainer1PokemonCount = this.trainer1.pokemonList.length;
+    let trainer2PokemonCount = this.trainer2.pokemonList.length;
+    let trainer1CurrentPokemon = this.trainer1.selectPokemon(0);
+    let trainer2CurrentPokemon = this.trainer2.selectPokemon(0);
+
+    while (trainer1PokemonCount > 0 && trainer2PokemonCount) {
+      while (trainer1CurrentPokemon.hp > 0 && trainer2CurrentPokemon.hp > 0) {
+        trainer1CurrentPokemon.nextAction(trainer2CurrentPokemon);
+        console.log(
+          "-----------------------------------------------------------"
+        );
+
+        if (trainer2CurrentPokemon.hp > 0) {
+          trainer2CurrentPokemon.nextAction(trainer1CurrentPokemon);
+          console.log(
+            "-----------------------------------------------------------"
+          );
+        }
+      }
+      if (trainer1CurrentPokemon.hp <= 0) {
+        console.log(
+          `${
+            this.trainer1.name + " " + trainer1CurrentPokemon.name
+          } has lost the battle.`
+        );
+        trainer1PokemonCount--;
+        let nextPokemon =
+          this.trainer1.pokemonList.length - trainer1PokemonCount;
+        trainer1CurrentPokemon = this.trainer1.selectPokemon(nextPokemon);
+        console.log(
+          "-----------------------------------------------------------"
+        );
+        trainer2CurrentPokemon.resetPokemonLevel();
+        if (trainer1PokemonCount == 0) {
+          console.log(`${this.trainer2.name} Wins`);
+          return this.trainer2;
+        }
+      } else {
+        console.log(
+          `${
+            this.trainer2.name + " " + trainer2CurrentPokemon.name
+          } has lost the battle.`
+        );
+        trainer2PokemonCount--;
+        let nextPokemon =
+          this.trainer2.pokemonList.length - trainer2PokemonCount;
+        trainer2CurrentPokemon = this.trainer2.selectPokemon(nextPokemon);
+        console.log(
+          "-----------------------------------------------------------"
+        );
+        trainer1CurrentPokemon.resetPokemonLevel();
+        if (trainer2PokemonCount == 0) {
+          console.log(`${this.trainer1.name} Wins`);
+          return this.trainer1;
+        }
+      }
+    }
+  }
+  resetWinnersPokemon(trainer) {
+    for (let i = 0; i < trainer.pokemonList.length; i++) {
+      trainer.pokemonList[i].hp = trainer.pokemonList[i].maxHp;
+      trainer.pokemonList[i].level = trainer.pokemonList[i].baseLevel;
+    }
+  }
+}
+
+let bracket1 = new Bracket(challengers[0],challengers[1]);
+let bracket2 = new Bracket(challengers[2],challengers[3]);
+
+
+
+let upperBracket = new Bracket(bracket1.getWinner(),bracket2.getWinner());
+
+console.log(upperBracket.getWinner());
+//end of battle class
