@@ -1,15 +1,22 @@
-function userPrompt(promptMessage, promptDefaultText,constraintMin, constraintMax){
-  let result = parseInt(prompt(promptMessage,promptDefaultText));
+// creating prompt function
+function userPrompt(promptMessage, entity, promptDefaultText,constraintMin, constraintMax){
+  let result = prompt(promptMessage+entity,promptDefaultText, constraintMin, constraintMax);
   
   try {
-    if (result < constraintMin || result) {
-      
+    if(result === ""||isNaN(result)){
+      result = userPrompt(`Please input number of: `,entity, "2-5", 2, 5);
+    }else if(parseInt(result)===undefined){
+      result = userPrompt("Invalid Input!","", "2-5", 2, 5);
     }
   } catch (error) {
-    
+    console.log(error);
   }
+  //console.log(result);
+  return result;
 }
-
+let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
+let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
+console.log(numberOfTrainers," ", numberOfPokemon);
 //creating pokemon class
 class Pokemon {
   constructor(name, type, damage, hp, defense, speed, evasiveness, level) {
