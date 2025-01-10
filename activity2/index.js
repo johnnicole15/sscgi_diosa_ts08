@@ -166,10 +166,12 @@ const shuffleChallengers = function (challengers) {
   }
   return challengers;
 };
-
+// get the challenger 
 const getChallengers = trainers.filter(trainer => trainers.indexOf(trainer) < numberOfTrainers);
 
-console.log(shuffleChallengers(getChallengers));
+//getting the challengers and automatically shuffle them
+let challenger = shuffleChallengers(getChallengers);
+console.log(challenger);
 //end of trainer shuffle for tournament
 
 //
