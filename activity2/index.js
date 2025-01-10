@@ -9,7 +9,7 @@ function userPrompt(promptMessage, entity, promptDefaultText,constraintMin, cons
   return result;
 }
 
-// let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
+let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
 // let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
 // console.log(numberOfTrainers," ", numberOfPokemon);
 
@@ -157,8 +157,8 @@ const ethan = new Trainer('Ethan');
 //creating shuffle trainer for tournament
 let trainers = [ash,brock,red,may,ethan];
 const shuffleChallengers = function (challengers) {
-  for (let i = 3; i > 0; i--) {
-    let moveChallenger = Math.floor(Math.random() * 3);
+  for (let i = challengers.length-1; i > 0; i--) {
+    let moveChallenger = Math.floor(Math.random() * challengers.length);
     [challengers[i], challengers[moveChallenger]] = [
       challengers[moveChallenger],
       challengers[i],
@@ -166,7 +166,10 @@ const shuffleChallengers = function (challengers) {
   }
   return challengers;
 };
-console.log(shuffleChallengers(trainers));
+
+const getChallengers = trainers.filter(trainer => trainers.indexOf(trainer) < numberOfTrainers);
+
+console.log(shuffleChallengers(getChallengers));
 //end of trainer shuffle for tournament
 
 //
