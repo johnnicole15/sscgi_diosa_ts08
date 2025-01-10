@@ -10,7 +10,7 @@ function userPrompt(promptMessage, entity, promptDefaultText,constraintMin, cons
 }
 
 let numberOfTrainers = userPrompt("Input number of ","Trainers", "2-5", 2,5);
-// let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
+let numberOfPokemon = userPrompt("Input number of ","Pokemon", "2-5", 2,5);
 // console.log(numberOfTrainers," ", numberOfPokemon);
 
 //creating pokemon class
@@ -123,7 +123,7 @@ class Trainer {
     this.pokemonList = [];
   }
   addPokemon(pokemon) {
-    pokemon.trainer = this;
+    pokemon.trainer = this.name;
     this.pokemonList.push(pokemon);
   }
   selectPokemon(index) {
@@ -150,122 +150,6 @@ const may = new Trainer('May');
 const ethan = new Trainer('Ethan');
 //console.log(ash,brock,red,may,ethan);
 //end of trainer objects
-
-
-//start setup tournament bracket stage
-
-//creating shuffle trainer for tournament
-let trainers = [ash,brock,red,may,ethan];
-const shuffleChallengers = function (challengers) {
-  for (let i = challengers.length-1; i > 0; i--) {
-    let moveChallenger = Math.floor(Math.random() * challengers.length);
-    [challengers[i], challengers[moveChallenger]] = [
-      challengers[moveChallenger],
-      challengers[i],
-    ];
-  }
-  return challengers;
-};
-// get the challenger 
-const getChallengers = trainers.filter(trainer => trainers.indexOf(trainer) < numberOfTrainers);
-
-//getting the challengers and automatically shuffle them
-let challengers = shuffleChallengers(getChallengers);
-console.log(challengers);
-//end of trainer shuffle for tournament
-
-//Start of creating pokemon using Pokemon subclass
-//Generation I
-let pikachu = new ElectricPokemon("Pikachu", 1, 100, 5);
-let charmander = new FirePokemon("Charmander", 1, 100, 5);
-let bulbasaur = new LeafPokemon("Bulbasaur", 1, 100, 5);
-let squirtle = new WaterPokemon("Squirtle", 1, 100, 5);
-
-//Generation II
-let chikorita = new LeafPokemon("Chikorita", 1, 100, 5);
-let cyndaquil = new ElectricPokemon("Cyndaquil", 1, 100, 5);
-let totodile = new WaterPokemon("Totodile", 1, 100, 5);
-
-//Generation III
-let treecko = new LeafPokemon("Treecko", 1, 100, 5);
-let torchic = new FirePokemon("Torchic", 1, 100, 5);
-let mudkip = new WaterPokemon("Mudkip", 1, 100, 5);
-
-//Generation IV
-let turtwig = new LeafPokemon("Turtwig", 1, 100, 5);
-let chimchar = new FirePokemon("Chimchar", 1, 100, 5);
-let piplup = new WaterPokemon("Piplup", 1, 100, 5);
-
-//Generation V
-let snivy = new LeafPokemon("Snivy", 1, 100, 5);
-let tepig = new FirePokemon("Tepig", 1, 100, 5);
-let oshawott = new WaterPokemon("Oshawott", 1, 100, 5);
-
-//Generation VI
-let chespin = new LeafPokemon("Chespin", 1, 100, 5);
-let fennekin = new FirePokemon("Fennekin", 1, 100, 5);
-let froakie = new WaterPokemon("Froakie", 1, 100, 5);
-
-//Generation VII
-let rowlet = new LeafPokemon("Rowlet", 1, 100, 5);
-let litten = new FirePokemon("Litten", 1, 100, 5);
-let popplio = new WaterPokemon("Popplio", 1, 100, 5);
-
-//Generation VIII
-let grookey = new LeafPokemon("Grookey", 1, 100, 5);
-let scorbunny = new FirePokemon("Scorbunny", 1, 100, 5);
-let sobble = new WaterPokemon("Sobble", 1, 100, 5);
-
-//adding all pokemon objects into an array
-let pokemons = [
-  pikachu,
-  Charmander,
-  bulbasaur,
-  squirtle,
-  chikorita,
-  cyndaquil,
-  totodile,
-  treecko,
-  torchic,
-  mudkip,
-  turtwig,
-  chimhar,
-  piplup,
-  snivy,
-  tepig,
-  chespin,
-  fennekin,
-  froakie,
-  rowlet,
-  litten,
-  popplio,
-  grookey,
-  scorbunny,
-  sobble,
-];
-//End of creating pokemon using Pokemon subclass
-
-//start of adding pokemon to trainers
-
-//end of adding pokemon to trainers
-
-// start of setting the matches between brackets
-
-if (numberOfTrainers == 2) {
-  console.log('1',numberOfTrainers);
-  
-}
-if (numberOfTrainers == 4) {
-  console.log('2',numberOfTrainers);
-  
-}
-if (numberOfTrainers % 2 ==1) {
-  console.log('3',numberOfTrainers);
-}
-
-// end of setting the matches between brackets
-
-//end of setup tournament bracket stage
 
 //creating pokemon subclasses
 
@@ -538,4 +422,137 @@ class WaterPokemon extends Pokemon {
 }
 //end of WaterPokemon subclass
 
+//Start of creating pokemon using Pokemon subclass
+//Generation I
+let pikachu = new ElectricPokemon("Pikachu", 1, 100, 5);
+let charmander = new FirePokemon("Charmander", 1, 100, 5);
+let bulbasaur = new LeafPokemon("Bulbasaur", 1, 100, 5);
+let squirtle = new WaterPokemon("Squirtle", 1, 100, 5);
+
+//Generation II
+let chikorita = new LeafPokemon("Chikorita", 1, 100, 5);
+let cyndaquil = new ElectricPokemon("Cyndaquil", 1, 100, 5);
+let totodile = new WaterPokemon("Totodile", 1, 100, 5);
+
+//Generation III
+let treecko = new LeafPokemon("Treecko", 1, 100, 5);
+let torchic = new FirePokemon("Torchic", 1, 100, 5);
+let mudkip = new WaterPokemon("Mudkip", 1, 100, 5);
+
+//Generation IV
+let turtwig = new LeafPokemon("Turtwig", 1, 100, 5);
+let chimchar = new FirePokemon("Chimchar", 1, 100, 5);
+let piplup = new WaterPokemon("Piplup", 1, 100, 5);
+
+//Generation V
+let snivy = new LeafPokemon("Snivy", 1, 100, 5);
+let tepig = new FirePokemon("Tepig", 1, 100, 5);
+let oshawott = new WaterPokemon("Oshawott", 1, 100, 5);
+
+//Generation VI
+let chespin = new LeafPokemon("Chespin", 1, 100, 5);
+let fennekin = new FirePokemon("Fennekin", 1, 100, 5);
+let froakie = new WaterPokemon("Froakie", 1, 100, 5);
+
+//Generation VII
+let rowlet = new LeafPokemon("Rowlet", 1, 100, 5);
+let litten = new FirePokemon("Litten", 1, 100, 5);
+let popplio = new WaterPokemon("Popplio", 1, 100, 5);
+
+//Generation VIII
+let grookey = new LeafPokemon("Grookey", 1, 100, 5);
+let scorbunny = new FirePokemon("Scorbunny", 1, 100, 5);
+let sobble = new WaterPokemon("Sobble", 1, 100, 5);
+
+//adding all pokemon objects into an array
+let pokemons = [
+  pikachu,
+  charmander,
+  bulbasaur,
+  squirtle,
+  chikorita,
+  cyndaquil,
+  totodile,
+  treecko,
+  torchic,
+  mudkip,
+  turtwig,
+  chimchar,
+  piplup,
+  snivy,
+  tepig,
+  oshawott,
+  chespin,
+  fennekin,
+  froakie,
+  rowlet,
+  litten,
+  popplio,
+  grookey,
+  scorbunny,
+  sobble,
+];
+//End of creating pokemon using Pokemon subclass
+
+//start of adding pokemon to trainers
+//end of adding pokemon to trainers
+
+// start of setting the matches between brackets
+
+if (numberOfTrainers == 2) {
+  console.log('1',numberOfTrainers);
+  
+}
+if (numberOfTrainers == 4) {
+  console.log('2',numberOfTrainers);
+  
+}
+if (numberOfTrainers % 2 ==1) {
+  console.log('3',numberOfTrainers);
+}
+
+// end of setting the matches between brackets
+
+//end of setup tournament bracket stage
+
 //end of creating sub classes
+//start setup tournament bracket stage
+
+//creating shuffle trainer for tournament
+let trainers = [ash,brock,red,may,ethan];
+const shuffleChallengers = function (challengers) {
+  for (let i = challengers.length-1; i > 0; i--) {
+    let moveChallenger = Math.floor(Math.random() * challengers.length);
+    [challengers[i], challengers[moveChallenger]] = [
+      challengers[moveChallenger],
+      challengers[i],
+    ];
+  }
+  return challengers;
+};
+// get the challenger 
+const getChallengers = trainers.filter(trainer => trainers.indexOf(trainer) < numberOfTrainers);
+
+//getting the challengers and automatically shuffle them
+let challengers = shuffleChallengers(getChallengers);
+
+//adding random pokemon on shuffled trainers
+for (let x = 0; x < numberOfTrainers; x++) {
+  if (x==4&&numberOfPokemon==5) {
+    for (let a = 0; a < 5; a++) {
+      //console.log(pokemons[a]);
+      challengers[4].addPokemon(pokemons[a]);
+    }
+  }else{
+    for (let y = 0; y < numberOfPokemon; y++) {
+      let rand = Math.floor(Math.random()*pokemons.length);
+      challengers[x].addPokemon(pokemons[rand]);
+      //console.log(pokemons);
+      // console.log(pokemons[rand]);
+      pokemons.splice(rand,1);
+      // console.log(pokemons);
+    }
+  }
+}
+// console.log(challengers);
+//end of trainer shuffle for tournament
