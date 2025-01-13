@@ -25,21 +25,22 @@ class Pokemon {
     this.defense = defense;
     this.maxDefense = defense;
     this.accumulatedRound = 0;
+    this.color = '';
   }
   //attack method - to log attack direction.
   attack(opponent) {
     console.log(
-      `${this.name} attack ${opponent.name} with ${opponent.hp} health!`
+      `%c${this.name} attack ${opponent.name} with ${opponent.hp} health!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
   }
   //receiveDamage method - to calculate the damage from the opponent
   receiveDamage(damage) {
     this.hp -= damage - this.defense; //setting hp to the actual damage given by the opponent but negating the damage with this pokemons defense
     console.log(
-      `lvl ${this.level} ${this.name} received -${damage} Damage and ${this.name} defense negating ${this.defense} Damage: ${this.hp}/${this.maxHp} HP`
+      `%clvl ${this.level} ${this.name} received -${damage} Damage and ${this.name} defense negating ${this.defense} Damage: ${this.hp}/${this.maxHp} HP`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
     if (this.hp <= 0) {
-      console.log(`${this.trainer.name} ${this.name} has fainted!`); // checking if pokemon died after receiving the damage
+      console.log(`%c☠ ${this.trainer.name} ${this.name} has fainted!`,`padding: 5px; border-radius:5px;background: black; color: white`); // checking if pokemon died after receiving the damage
     }
     if (this.defense > this.maxDefense) {
       this.defense = this.maxDefense; // checking if this pokemon aquires a defense boost after healing, then setting it to the original defense after taking a damage
@@ -54,32 +55,32 @@ class Pokemon {
     if (this.hp == this.maxHp) { // checking if pokemons health is already full, then this heal will not reflect instead it only gives the defense boost of 2.
       this.hp = this.maxHp;
       console.log(
-        `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+        `%c${this.trainer.name} ${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
       );
     } else if ((this.hp + 3) > this.maxHp) { // checking if the heal exceeds the max health.
       console.log(
-        `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+        `%c${this.trainer.name} ${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
           this.maxHp
-        }, but receives 2 defense`
+        }, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
       );
       this.hp = this.maxHp;
     } else { // healing this pokemon with 3 health and giving a defense boost of 3
       this.hp += 3;
       console.log(
-        `${this.name} heals for 3hp: ${this.hp}/${this.maxHp}, and receives 3 defense`
+        `%c${this.trainer.name} ${this.name} heals for 3hp: ${this.hp}/${this.maxHp}, and receives 3 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
       );
     }
   }
   calculateDamage() {
     this.accumulatedRound +=1;
-    let critical = Math.floor(Math.random(), 10);
+    let critical = Math.floor(Math.random() * 10);
     let damageMultiplyer = 0;
     if (critical < 3) {
       damageMultiplyer = Math.round(2.5 * this.level);
       console.log(
-        `The Attack Critical Strike adding ${
+        `%cThe Attack Critical Strike⚔ adding ${
           Math.round(this.level * 2.5) - this.level * 2
-        } Damage.`
+        } Damage.`, `background: radial-gradient(circle, rgba(218,75,75,1) 0%, rgba(114,191,208,1) 8%, rgba(235,161,161,1) 23%, rgba(238,255,65,1) 41%, rgba(238,255,100,1) 59%, rgba(239,195,47,1) 79%, rgba(252,176,69,1) 100%); padding: 5px; border-radius: 5px; font-size: 14px;font-weight: bold;`
       );
     } else {
       damageMultiplyer = 2 * this.level;
@@ -93,15 +94,6 @@ class Pokemon {
     this.hp = this.maxHp;
   }
 }
-
-//checking if Pokemon Class methods are working as intended
-let a = new Pokemon("Pikachu", "Electric", 1, 9, 1, 3, 2, 1);
-let b = new Pokemon("Charmander", "Fire", 1, 9, 1, 3, 3, 1);
-
-a.attack(b);
-b.receiveDamage(a.calculateDamage());
-b.heal();
-
 //end of pokemon class
 
 //creating Trainer Class
@@ -126,14 +118,14 @@ class Trainer {
   selectPokemon(index) {
     return this.pokemonList[index];
   }
-  displayTrainer() {
+  displayTrainer(add) {
     console.log(
-      "%c\n Champion!!! " + `${this.name} `,
-      "font-size: 28px;color: white; background: black;"
+      `%c${add} ${this.name} `,
+      "font-size: 58px;color: white; background: black;border-radius:15px;"
     );
-    console.log("\nPokemons");
+    console.log("%cPokemons",'background: linear-gradient(180deg, rgba(255,255,255,1) 39%, rgba(0,0,0,1) 42%, rgba(0,0,0,1) 62%, rgba(255,0,0,1) 64%); padding: 28px 3px; font-size: 15px;margin: 2px 2%;border-radius:37px;border: solid 2px black;color: white;');
     for (let i = 0; i < this.pokemonList.length; i++) {
-      console.log("   ", this.pokemonList[i].name);
+      console.log(`\t%c${this.pokemonList[i].name}`,`color:${this.pokemonList[i].color};padding: 6px;background: #455A64;font-size: 14px;margin: 2px 2%;font-weight: bold;border-radius: 5px;`);
     }
   }
 }
@@ -155,33 +147,34 @@ class ElectricPokemon extends Pokemon {
   constructor(name, level, hp, defense) {
     // calling the base class constructor
     super(name, "Electric", level, hp, defense);
+    this.color = '#ffff01'
   }
   nextAction(opponent) {
     let getRandom = Math.floor(Math.random() * 8);
     if (getRandom > 2) {
       this.attack(opponent);
     } else {
-      console.log(`%c \u{1F60E} ${this.trainer.name} decided to use heal on lvl ${this.level} ${this.name}`,'background: gray; margin: 5px 15px;');
+      console.log(`%c${this.trainer.name} decided to use heal on lvl ${this.level} ⚡${this.name}`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;');
       this.heal();
     }
   }
   attack(opponent) {
     console.log(
-      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`
+      `%c${this.trainer.name} lvl ${this.level} ⚡${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
     opponent.receiveDamage(this.calculateDamage());
   }
   calculateDamage() {
     if (this.level % 5 == 0) {
       console.log(
-        `${this.trainer.name} ${this.name} uses` + " %c ThunderBolt! ",
-        "color: yellow; background: black"
+        `%c${this.trainer.name} ⚡${this.name} uses` + "%c ⚡ThunderBolt! ",``,
+        `color: ${this.color}; background: black; padding: 8px; border-radius:5px;font-size:18px;`
       );
 
       this.level += 2;
       return this.level * 3;
     } else {
-      console.log(`${this.trainer.name} ${this.name} uses Quick Attack!`);
+      console.log(`%c${this.trainer.name} ⚡${this.name} uses Quick Attack!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`);
 
       this.level += 2;
       return super.calculateDamage();
@@ -195,19 +188,19 @@ class ElectricPokemon extends Pokemon {
       if ((this.hp) == this.maxHp) {
         this.hp = this.maxHp;
         console.log(
-          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+          `%c⚡${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       } else if ((this.hp + 5) > this.maxHp) {
         console.log(
-          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+          `%c⚡${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
             this.maxHp
-          }, but receives 2 defense`
+          }, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
         this.hp = this.maxHp;
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+          `%c⚡${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       }
     }else{
@@ -223,33 +216,34 @@ class FirePokemon extends Pokemon {
   constructor(name, level, hp, defense) {
     // calling the base class constructor
     super(name, "Fire", level, hp, defense);
+    this.color = '#ff4001';
   }
   nextAction(opponent) {
     let getRandom = Math.floor(Math.random() * 8);
     if (getRandom > 2) {
       this.attack(opponent);
     } else {
-      console.log(`${this.name} decided to use heal`);
+      console.log(`%c${this.trainer.name} decided to use heal on lvl ${this.level} 🔥${this.name}`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;');
       this.heal();
     }
   }
   attack(opponent) {
     console.log(
-      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+      `%c${this.trainer.name} lvl ${this.level} 🔥${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
     opponent.receiveDamage(this.calculateDamage());
   }
   calculateDamage() {
     if (this.level % 5 == 0) {
       console.log(
-        `${this.trainer.name} ${this.name} uses` + " %c Flame Thower! ",
-        "color: Orange; background: black"
+        `${this.trainer.name} 🔥${this.name} uses` + " %c 🔥Flame Thower! ",
+        `color: ${this.color}; background: black; padding: 8px; border-radius:5px;font-size:18px;`
       );
 
       this.level += 2;
       return this.level * 3;
     } else {
-      console.log(`${this.trainer.name} ${this.name} uses Ember!`);
+      console.log(`%c${this.trainer.name} 🔥${this.name} uses Ember!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`);
 
       this.level += 2;
       return super.calculateDamage();
@@ -263,19 +257,19 @@ class FirePokemon extends Pokemon {
       if ((this.hp) == this.maxHp) {
         this.hp = this.maxHp;
         console.log(
-          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+          `%c🔥${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       } else if ((this.hp + 5) > this.maxHp) {
         console.log(
-          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+          `%c🔥${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
             this.maxHp
-          }, but receives 2 defense`
+          }, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
         this.hp = this.maxHp;
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+          `%c🔥${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       }
     }else{
@@ -290,33 +284,34 @@ class LeafPokemon extends Pokemon {
   constructor(name, level, hp, defense) {
     // calling the base class constructor
     super(name, "Fire", level, hp, defense);
+    super.color = '#7CB342';
   }
   nextAction(opponent) {
     let getRandom = Math.floor(Math.random() * 8);
     if (getRandom > 2) {
       this.attack(opponent);
     } else {
-      console.log(`${this.name} decided to use heal`);
+      console.log(`%c${this.trainer.name} decided to use heal on lvl ${this.level} 🍃${this.name}`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;');
       this.heal();
     }
   }
   attack(opponent) {
     console.log(
-      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+      `%c${this.trainer.name} lvl ${this.level} 🍃${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
     opponent.receiveDamage(this.calculateDamage());
   }
   calculateDamage() {
     if (this.level % 5 == 0) {
       console.log(
-        `${this.trainer.name} ${this.name} uses` + " %c Leaf Storm! ",
-        "color: Green; background: black"
+        `${this.trainer.name} 🍃${this.name} uses` + " %c 🍃Leaf Storm! ",
+        `color: ${this.color}; background: black; padding: 8px; border-radius:5px;font-size:18px;`
       );
 
       this.level += 2;
       return this.level * 3;
     } else {
-      console.log(`${this.trainer.name} ${this.name} uses Vine Whip!`);
+      console.log(`%c${this.trainer.name} 🍃${this.name} uses Vine Whip!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`);
 
       this.level += 2;
       return super.calculateDamage();
@@ -329,20 +324,20 @@ class LeafPokemon extends Pokemon {
     if (this.level % 5 == 0) {
       if ((this.hp) == this.maxHp) {
         console.log(
-          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+          `%c🍃${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
         this.hp = this.maxHp;
       } else if ((this.hp + 5) > this.maxHp) {
         this.hp = this.maxHp;
         console.log(
-          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+          `%c🍃${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
             this.maxHp
-          }, but receives 2 defense`
+          }, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+          `%c🍃${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       }
     }else{
@@ -356,34 +351,35 @@ class LeafPokemon extends Pokemon {
 class WaterPokemon extends Pokemon {
   constructor(name, level, hp, defense) {
     // calling the base class constructor
-    super(name, "Fire", level, hp, defense);
+    super(name, "Water", level, hp, defense);
+    super.color = '#0080ff';
   }
   nextAction(opponent) {
     let getRandom = Math.floor(Math.random() * 8);
     if (getRandom > 2) {
       this.attack(opponent);
     } else {
-      console.log(`${this.name} decided to use heal`);
+      console.log(`%c${this.trainer.name} decided to use heal on lvl ${this.level} 🌊${this.name}`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;');
       this.heal();
     }
   }
   attack(opponent) {
     console.log(
-      `${this.trainer.name} lvl ${this.level} ${this.name} decide to attack ${opponent.name}!`
+      `%c${this.trainer.name} lvl ${this.level} 🌊${this.name} decide to attack ${opponent.trainer.name} ${opponent.name}!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`
     );
     opponent.receiveDamage(this.calculateDamage());
   }
   calculateDamage() {
     if (this.level % 5 == 0) {
       console.log(
-        `${this.trainer.name} ${this.name} uses` + " %c Hydro Pump! ",
-        "color: blue; background: black"
+        `${this.trainer.name} 🌊${this.name} uses` + " %c 🌊Hydro Pump! ",
+        `color: ${this.color}; background: black; padding: 8px; border-radius:5px;font-size:18px;`
       );
 
       this.level += 2;
       return this.level * 3;
     } else {
-      console.log(`${this.trainer.name} ${this.name} uses Bubbles!`);
+      console.log(`%c${this.trainer.name} 🌊${this.name} uses Bubbles!`,`background: linear-gradient(270deg, rgba(238,174,202,1) 62%, rgba(204,179,214,1) 88%, rgba(148,187,233,1) 100%);;padding: 8px; border-radius:5px;`);
 
       this.level += 2;
       return super.calculateDamage();
@@ -397,19 +393,19 @@ class WaterPokemon extends Pokemon {
       if ((this.hp) == this.maxHp) {
         this.hp = this.maxHp;
         console.log(
-          `${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`
+          `%c🌊${this.name} already on full health: ${this.hp}/${this.maxHp}, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       } else if ((this.hp + 5) > this.maxHp) {
         console.log(
-          `${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
+          `%c🌊${this.name} overheals for ${this.hp - this.maxHp}: ${this.hp}/${
             this.maxHp
-          }, but receives 2 defense`
+          }, but receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
         this.hp = this.maxHp;
       } else {
         this.hp += 5;
         console.log(
-          `${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`
+          `%c🌊${this.name} heals for 5hp: ${this.hp}/${this.maxHp}, and receives 2 defense`,'background: #66BB6A;border-radius: 5px;padding: 7px 3px; margin: 5px 10px;font-size:14px;'
         );
       }
     }else{
@@ -428,7 +424,7 @@ let squirtle = new WaterPokemon("Squirtle", 1, 100, 5);
 
 //Generation II
 let chikorita = new LeafPokemon("Chikorita", 1, 100, 5);
-let cyndaquil = new ElectricPokemon("Cyndaquil", 1, 100, 5);
+let cyndaquil = new FirePokemon("Cyndaquil", 1, 100, 5);
 let totodile = new WaterPokemon("Totodile", 1, 100, 5);
 
 //Generation III
@@ -491,28 +487,10 @@ let pokemons = [
 ];
 //End of creating pokemon using Pokemon subclass
 
-//start of adding pokemon to trainers
-//end of adding pokemon to trainers
-
-// start of setting the matches between brackets
-
-if (numberOfTrainers == 2) {
-  console.log('1',numberOfTrainers);
-  
-}
-if (numberOfTrainers == 4) {
-  console.log('2',numberOfTrainers);
-  
-}
-if (numberOfTrainers % 2 ==1) {
-  console.log('3',numberOfTrainers);
-}
-
-// end of setting the matches between brackets
-
 //end of setup tournament bracket stage
-
 //end of creating sub classes
+
+
 //start setup tournament bracket stage
 
 //creating shuffle trainer for tournament
@@ -551,7 +529,10 @@ for (let x = 0; x < numberOfTrainers; x++) {
     }
   }
 }
-console.log(challengers);
+
+for (let i = 0; i < challengers.length; i++) {
+  challengers[i].displayTrainer('');
+}
 //end of trainer shuffle for tournament
 
 //start of battle class
@@ -568,10 +549,8 @@ class Battle {
     }
   }
   startBattle() {
-    console.log(
-      `The battle between ${this.trainer1.name} and ${this.trainer2.name} has begun`
-    );
-    console.log("-----------------------------------------------------------");
+    console.log(`%cThe battle between ${this.trainer1.name} and ${this.trainer2.name} has begun`,'background: black;color:white; padding: 12px;font-size: 28px;border-radius: 10px;');
+    console.log(`%c-----------------------------------------------------------`,`font-weight: bold; font-size: 24px;`);
 
     let trainer1PokemonCount = this.trainer1.pokemonList.length;
     let trainer2PokemonCount = this.trainer2.pokemonList.length;
@@ -583,7 +562,7 @@ class Battle {
     while (trainer1PokemonCount > 0 && trainer2PokemonCount) {
       while (trainer1CurrentPokemon.hp > 0 && trainer2CurrentPokemon.hp > 0) {
         trainer1CurrentPokemon.nextAction(trainer2CurrentPokemon);
-        console.log("-----------------------------------------------------------");
+        console.log(`%c-----------------------------------------------------------`,`font-weight: bold; font-size: 24px;`);
 
         if (trainer2CurrentPokemon.hp > 0) {
           trainer2CurrentPokemon.nextAction(trainer1CurrentPokemon);
@@ -593,33 +572,30 @@ class Battle {
         }
       }
       if (trainer1CurrentPokemon.hp <= 0) {
-        console.log(
-          `${this.trainer1.name + " " + trainer1CurrentPokemon.name} has lost the battle.`);
+        console.log(`%c${this.trainer1.name + " " + trainer1CurrentPokemon.name} has lost the battle.`, `padding: 5px; border-radius:5px; background: #E0E0E0;`);
         trainer1PokemonCount--;
         let nextPokemon = this.trainer1.pokemonList.length - trainer1PokemonCount;
         trainer1CurrentPokemon = this.trainer1.selectPokemon(nextPokemon);
-        console.log("-----------------------------------------------------------");
+        console.log(`%c-----------------------------------------------------------`,`font-weight: bold; font-size: 24px;`);
         trainer2CurrentPokemon.resetPokemonLevel();
         if (trainer1PokemonCount == 0) {
-          console.log(`${this.trainer2.name} Wins`);
+          console.log(`%c${this.trainer2.name} Wins 🎉`,`padding: 35px; border-radius: 5px; font-size: 28px;background:#FFF176;`);
           this.trainer2.wins += 1;
           this.trainer1.losses += 1;
           this.#result = [this.trainer2,this.trainer1];
         }
       } else {
         console.log(
-          `${
-            this.trainer2.name + " " + trainer2CurrentPokemon.name
-          } has lost the battle.`
+          `%c${this.trainer2.name + " " + trainer2CurrentPokemon.name} has lost the battle.`, `padding: 5px; border-radius:5px; background: #E0E0E0;`
         );
         trainer2PokemonCount--;
         let nextPokemon =
           this.trainer2.pokemonList.length - trainer2PokemonCount;
         trainer2CurrentPokemon = this.trainer2.selectPokemon(nextPokemon);
-        console.log("-----------------------------------------------------------");
+        console.log(`%c-----------------------------------------------------------`,`font-weight: bold; font-size: 24px;`);
         trainer1CurrentPokemon.resetPokemonLevel();
         if (trainer2PokemonCount == 0) {
-          console.log(`${this.trainer1.name} Wins`);
+          console.log(`%c${this.trainer1.name} Wins 🎉`,`padding: 35px; border-radius: 5px;font-size: 28px;background:#FFF176;`);
           this.trainer1.wins += 1;
           this.trainer2.losses += 1;
           this.#result = [this.trainer1,this.trainer2];
@@ -635,37 +611,6 @@ class Battle {
     return this.#result[1];
   }
 }
-
-//checking if bracket and battle works;
-// let bracket1 = new Bracket('First Bracket',challengers[0],challengers[1]);
-// bracket1.commenceBattle();
-// console.log(bracket1.getWinner(), " ",bracket1.getloser());
-// console.log(`%c ${bracket1.title} winner is ${bracket1.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-// let bracket2 = new Bracket('Second Bracket',challengers[2],challengers[3]);
-
-// bracket2.commenceBattle();
-// console.log(bracket2.getWinner(),bracket2.getloser());
-// console.log(`%c ${bracket2.title} winner is ${bracket2.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-// let bracket3 = new Bracket('Third Bracket',bracket1.getWinner(),challengers[4]);
-// bracket3.commenceBattle();
-// console.log(bracket3.getWinner(), " ",bracket3.getloser());
-// console.log(`%c ${bracket3.title} winner is ${bracket3.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-// let bracket4 = new Bracket('Fourth Bracket',bracket1.getloser(),bracket2.getloser());
-// bracket4.commenceBattle();
-// console.log(bracket4.getWinner(), " ",bracket4.getloser());
-// console.log(`%c ${bracket4.title} winner is ${bracket4.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-// let bracket5 = new Bracket('Fifth Bracket',bracket3.getloser(),bracket4.getWinner());
-// bracket5.commenceBattle();
-// console.log(bracket5.getWinner(), " ",bracket5.getloser());
-// console.log(`%c ${bracket5.title} winner is ${bracket5.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-// console.log(`%c${bracket2.getWinner().name}, ${bracket3.getWinner().name} and ${bracket5.getWinner().name} will proceed to Round Robin Tournament `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
-
-//console.log(upperBracket.getWinner());
 //end of battle class
 
 //start of RoundRobin Class
@@ -689,26 +634,33 @@ class RoundRobin{
     this.#nextRRMatch(MatchName,team1,team2);
       }
     }
-    console.log(this.#matches);
+    
     let winner;
     let score =0;
-    for (let i = 0; i < 3; i++) {
-      console.log(this.RRchallengers[i]);
-      if(this.RRchallengers[i].wins > score){
-        score = this.RRchallengers[i].wins;
-        winner = this.RRchallengers[i];
-      }
-    }
     if (this.RRchallengers[0].wins == this.RRchallengers[1].wins && this.RRchallengers[1].wins==this.RRchallengers[2].wins) {
       for (let i = 0; i < 3; i++) {
-        console.log(this.RRchallengers[i].getAcummulatedRounds())
+        console.log(this.RRchallengers[i].getAcummulatedRounds());
+        if(this.RRchallengers[i].getAcummulatedRounds() > score){
+          score = this.RRchallengers[i].getAcummulatedRounds();
+          winner = this.RRchallengers[i];
+        }
+      }
+    }else{
+      for (let i = 0; i < 3; i++) {
         if(this.RRchallengers[i].getAcummulatedRounds() > score){
           score = this.RRchallengers[i].getAcummulatedRounds();
           winner = this.RRchallengers[i];
         }
       }
     }
-    console.log(winner.name);
+    for (let i = 0; i < 3; i++) { 
+      console.log(`Match${i+1}: %c${this.#matches[`Match${i+1}`].getWinner().name}%c and %c${this.#matches[`Match${i+1}`].getloser().name}`,`padding: 5px; background: green;font-weight: bold;`,``,`padding: 5px;background: red; font-weight: bold;`);
+    }
+    for (let i = 0; i < 3; i++) {
+      console.log(`%c ${this.RRchallengers[i].name}: Wins - ${this.RRchallengers[i].wins}   Losses - ${this.RRchallengers[i].losses} `,`padding: 5px; border-radius: 5px; font-size: 22px; background: #9E9D24;`)
+    }
+    console.log(`%c🎉${winner.name} is the Champion!!!🎉`,`padding: 30px;background: #4DB6AC;font-size: 32px; font-weight: bold;margin: 0 15%;border-radius: 8px;`)
+    winner.displayTrainer('');
   }
     #nextRRMatch(bracketName,trainer1,trainer2){
     this.#matches[bracketName] = new Battle(bracketName,trainer1,trainer2);
@@ -730,7 +682,6 @@ class BracketStage{
     let bye;
     let qualifiedToRR=[];
     if (this.challengersCount==2) {
-      console.log("get");
       this.#nextBracketStage('Battle',this.challengers[0],this.challengers[1]);
     }else if (this.challengersCount==4) {
       this.challengersCount /= 2;
@@ -745,7 +696,6 @@ class BracketStage{
       qualifiedToRR = this.challengers;
     }else{
       bye = challengers[challengers.length-1];
-      console.log("bye",bye);
       for (let i = 0; i < 2; i++) {
         let bracketName = `Bracket${i+1}`
         this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1]);
