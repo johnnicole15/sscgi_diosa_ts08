@@ -104,6 +104,8 @@ class Trainer {
   constructor(name) {
     this.name = name;
     this.pokemonList = [];
+    this.wins = 0;
+    this.losses = 0;
   }
   addPokemon(pokemon) {
     pokemon.trainer = this;
@@ -542,21 +544,30 @@ console.log(challengers);
 
 //start of bracket class
 class Bracket{
-  constructor(trainer1,trainer2){
+  constructor(title,trainer1,trainer2){
+    this.title = title;
     this.trainer1 = trainer1;
     this.trainer2 = trainer2;
   }
-  #commenceBattle(){
+  commenceBattle(){
     let battle = new Battle(this.trainer1,this.trainer2);
     let winner = battle.startBattle();
-    battle.resetWinnersPokemon(winner);
-    return winner;
+    battle.resetPokemon(winner[0]);
+    battle.resetPokemon(winner[1]);
+    this.#result = winner;
   }
+  #result = [];
   getWinner(){
-    return this.#commenceBattle();
+    return this.#result[0];
+  }
+  getloser(){
+    return this.#result[1];
   }
 }
 //end of bracket class
+
+
+
 
 //start of battle class
 
@@ -606,7 +617,9 @@ class Battle {
         trainer2CurrentPokemon.resetPokemonLevel();
         if (trainer1PokemonCount == 0) {
           console.log(`${this.trainer2.name} Wins`);
-          return this.trainer2;
+          this.trainer2.wins += 1;
+          this.trainer1.losses += 1;
+          return [this.trainer2,this.trainer1];
         }
       } else {
         console.log(
@@ -624,12 +637,14 @@ class Battle {
         trainer1CurrentPokemon.resetPokemonLevel();
         if (trainer2PokemonCount == 0) {
           console.log(`${this.trainer1.name} Wins`);
-          return this.trainer1;
+          this.trainer1.wins += 1;
+          this.trainer2.losses += 1;
+          return [this.trainer1,this.trainer2];
         }
       }
     }
   }
-  resetWinnersPokemon(trainer) {
+  resetPokemon(trainer) {
     for (let i = 0; i < trainer.pokemonList.length; i++) {
       trainer.pokemonList[i].hp = trainer.pokemonList[i].maxHp;
       trainer.pokemonList[i].level = trainer.pokemonList[i].baseLevel;
@@ -637,12 +652,95 @@ class Battle {
   }
 }
 
-let bracket1 = new Bracket(challengers[0],challengers[1]);
-let bracket2 = new Bracket(challengers[2],challengers[3]);
+//checking if bracket and battle works;
+// let bracket1 = new Bracket('First Bracket',challengers[0],challengers[1]);
+// bracket1.commenceBattle();
+// console.log(bracket1.getWinner(), " ",bracket1.getloser());
+// console.log(`%c ${bracket1.title} winner is ${bracket1.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
 
+// let bracket2 = new Bracket('Second Bracket',challengers[2],challengers[3]);
 
+// bracket2.commenceBattle();
+// console.log(bracket2.getWinner(),bracket2.getloser());
+// console.log(`%c ${bracket2.title} winner is ${bracket2.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
 
-let upperBracket = new Bracket(bracket1.getWinner(),bracket2.getWinner());
+// let bracket3 = new Bracket('Third Bracket',bracket1.getWinner(),challengers[4]);
+// bracket3.commenceBattle();
+// console.log(bracket3.getWinner(), " ",bracket3.getloser());
+// console.log(`%c ${bracket3.title} winner is ${bracket3.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
 
-console.log(upperBracket.getWinner());
+// let bracket4 = new Bracket('Fourth Bracket',bracket1.getloser(),bracket2.getloser());
+// bracket4.commenceBattle();
+// console.log(bracket4.getWinner(), " ",bracket4.getloser());
+// console.log(`%c ${bracket4.title} winner is ${bracket4.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
+
+// let bracket5 = new Bracket('Fifth Bracket',bracket3.getloser(),bracket4.getWinner());
+// bracket5.commenceBattle();
+// console.log(bracket5.getWinner(), " ",bracket5.getloser());
+// console.log(`%c ${bracket5.title} winner is ${bracket5.getWinner().name} `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
+
+// console.log(`%c${bracket2.getWinner().name}, ${bracket3.getWinner().name} and ${bracket5.getWinner().name} will proceed to Round Robin Tournament `,'font-size: 16px;color: green;padding: 30px;background: #E6E6FA;');
+
+//console.log(upperBracket.getWinner());
 //end of battle class
+
+//start of bracket stage
+class BracketStage{
+  constructor(challengers){
+    this.challengers = challengers;
+    this.challengersCount = this.challengers.length;
+  }
+  #matches = [];
+  #winnersBracket =[];
+  #losersBracket=[];
+  commenceBracketStage(){
+    //procedural bracketing
+    let bye;
+    if (this.challengersCount%2==0) {
+      this.challengersCount /= 2;
+      for (let i = 0; i < this.challengersCount; i++) {
+        let bracketName = `Bracket${i+1}`
+        this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1])
+      }
+      this.#nextBracketStage('loser Bracket',this.#losersBracket[0],this.#losersBracket[1]);
+    }else{
+      bye = this.challengers[challengers[challengers-1]]
+      this.challengersCount /= 2;
+      for (let i = 0; i < this.challengersCount; i++) {
+        let bracketName = `Bracket${i+1}`
+        this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1])
+      }
+    }
+    console.log(this.#matches);
+    console.log(this.#winnersBracket);
+    console.log(this.#losersBracket); 
+  }
+  #nextBracketStage(bracketName,trainer1,trainer2){
+      this.#matches[bracketName] = new Bracket(bracketName,trainer1,trainer2);
+      this.#matches[bracketName].commenceBattle();
+      this.#losersBracket.push(this.#matches[bracketName].getloser());
+      this.#winnersBracket.push(this.#matches[bracketName].getWinner());
+  }
+}
+
+let bracketStage = new BracketStage(challengers);
+bracketStage.commenceBracketStage();
+//end of bracket stage
+//start of RoundRobin Class
+class RoundRobin{
+  constructor(challengers){
+    this.challengers1 = challengers[0];
+    this.challengers2 = challengers[1];
+    this.challengers3 = challengers[2];
+  }
+  startRoundRobin(){
+    for (let i = 0; i < challengers.length; i++) {
+      for (let j = i + 1; j < challengers.length; j++) {
+          const team1 = teams[i];
+          const team2 = teams[j];
+          
+      }
+    }
+  }
+}
+//end of RoundRobin Class
