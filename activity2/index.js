@@ -24,6 +24,7 @@ class Pokemon {
     this.maxHp = hp;
     this.defense = defense;
     this.maxDefense = defense;
+    this.accumulatedRound = 0;
   }
   //attack method - to log attack direction.
   attack(opponent) {
@@ -70,6 +71,7 @@ class Pokemon {
     }
   }
   calculateDamage() {
+    this.accumulatedRound +=1;
     let critical = Math.floor(Math.random(), 10);
     let damageMultiplyer = 0;
     if (critical < 3) {
@@ -86,6 +88,9 @@ class Pokemon {
   }
   resetPokemonLevel(){
     this.level = this.baseLevel;
+  }
+  resetPokemonHP(){
+    this.hp = this.maxHp;
   }
 }
 
@@ -106,6 +111,13 @@ class Trainer {
     this.pokemonList = [];
     this.wins = 0;
     this.losses = 0;
+  }
+  getAcummulatedRounds(){
+    let count=0;
+    for (let i = 0; i < this.pokemonList.length; i++) {
+      count += this.pokemonList[i].accumulatedRound;
+    }
+    return count;
   }
   addPokemon(pokemon) {
     pokemon.trainer = this;
@@ -542,39 +554,18 @@ for (let x = 0; x < numberOfTrainers; x++) {
 console.log(challengers);
 //end of trainer shuffle for tournament
 
-//start of bracket class
-class Bracket{
-  constructor(title,trainer1,trainer2){
+//start of battle class
+
+class Battle {
+  constructor(title, trainer1, trainer2) {
     this.title = title;
     this.trainer1 = trainer1;
     this.trainer2 = trainer2;
   }
-  commenceBattle(){
-    let battle = new Battle(this.trainer1,this.trainer2);
-    let winner = battle.startBattle();
-    battle.resetPokemon(winner[0]);
-    battle.resetPokemon(winner[1]);
-    this.#result = winner;
-  }
-  #result = [];
-  getWinner(){
-    return this.#result[0];
-  }
-  getloser(){
-    return this.#result[1];
-  }
-}
-//end of bracket class
-
-
-
-
-//start of battle class
-
-class Battle {
-  constructor(trainer1, trainer2) {
-    this.trainer1 = trainer1;
-    this.trainer2 = trainer2;
+  #healPokemons(trainer){
+    for (let i = 0; i < trainer.pokemonList.length; i++) {
+      trainer.pokemonList[i].resetPokemonHP();
+    }
   }
   startBattle() {
     console.log(
@@ -586,13 +577,13 @@ class Battle {
     let trainer2PokemonCount = this.trainer2.pokemonList.length;
     let trainer1CurrentPokemon = this.trainer1.selectPokemon(0);
     let trainer2CurrentPokemon = this.trainer2.selectPokemon(0);
-
+    
+    this.#healPokemons(this.trainer1);
+    this.#healPokemons(this.trainer2);
     while (trainer1PokemonCount > 0 && trainer2PokemonCount) {
       while (trainer1CurrentPokemon.hp > 0 && trainer2CurrentPokemon.hp > 0) {
         trainer1CurrentPokemon.nextAction(trainer2CurrentPokemon);
-        console.log(
-          "-----------------------------------------------------------"
-        );
+        console.log("-----------------------------------------------------------");
 
         if (trainer2CurrentPokemon.hp > 0) {
           trainer2CurrentPokemon.nextAction(trainer1CurrentPokemon);
@@ -603,23 +594,17 @@ class Battle {
       }
       if (trainer1CurrentPokemon.hp <= 0) {
         console.log(
-          `${
-            this.trainer1.name + " " + trainer1CurrentPokemon.name
-          } has lost the battle.`
-        );
+          `${this.trainer1.name + " " + trainer1CurrentPokemon.name} has lost the battle.`);
         trainer1PokemonCount--;
-        let nextPokemon =
-          this.trainer1.pokemonList.length - trainer1PokemonCount;
+        let nextPokemon = this.trainer1.pokemonList.length - trainer1PokemonCount;
         trainer1CurrentPokemon = this.trainer1.selectPokemon(nextPokemon);
-        console.log(
-          "-----------------------------------------------------------"
-        );
+        console.log("-----------------------------------------------------------");
         trainer2CurrentPokemon.resetPokemonLevel();
         if (trainer1PokemonCount == 0) {
           console.log(`${this.trainer2.name} Wins`);
           this.trainer2.wins += 1;
           this.trainer1.losses += 1;
-          return [this.trainer2,this.trainer1];
+          this.#result = [this.trainer2,this.trainer1];
         }
       } else {
         console.log(
@@ -631,24 +616,23 @@ class Battle {
         let nextPokemon =
           this.trainer2.pokemonList.length - trainer2PokemonCount;
         trainer2CurrentPokemon = this.trainer2.selectPokemon(nextPokemon);
-        console.log(
-          "-----------------------------------------------------------"
-        );
+        console.log("-----------------------------------------------------------");
         trainer1CurrentPokemon.resetPokemonLevel();
         if (trainer2PokemonCount == 0) {
           console.log(`${this.trainer1.name} Wins`);
           this.trainer1.wins += 1;
           this.trainer2.losses += 1;
-          return [this.trainer1,this.trainer2];
+          this.#result = [this.trainer1,this.trainer2];
         }
       }
     }
   }
-  resetPokemon(trainer) {
-    for (let i = 0; i < trainer.pokemonList.length; i++) {
-      trainer.pokemonList[i].hp = trainer.pokemonList[i].maxHp;
-      trainer.pokemonList[i].level = trainer.pokemonList[i].baseLevel;
-    }
+  #result = [];
+  getWinner(){
+    return this.#result[0];
+  }
+  getloser(){
+    return this.#result[1];
   }
 }
 
@@ -684,6 +668,55 @@ class Battle {
 //console.log(upperBracket.getWinner());
 //end of battle class
 
+//start of RoundRobin Class
+class RoundRobin{
+  constructor(challengers){
+    this.RRchallengers = challengers;
+  }
+  #matches = [];
+  startRoundRobin(){
+    this.RRchallengers.forEach(challenger => {
+      challenger.wins =0;
+      challenger.losses = 0;
+      return challenger;
+    });
+    for (let i = 0; i < this.RRchallengers.length; i++) {
+      for (let j = i + 1; j < this.RRchallengers.length; j++) {
+          const team1 = this.RRchallengers[i];
+          const team2 = this.RRchallengers[j];
+          let MatchName = `Match${i+j}`;
+    console.log(i,j);
+    this.#nextRRMatch(MatchName,team1,team2);
+      }
+    }
+    console.log(this.#matches);
+    let winner;
+    let score =0;
+    for (let i = 0; i < 3; i++) {
+      console.log(this.RRchallengers[i]);
+      if(this.RRchallengers[i].wins > score){
+        score = this.RRchallengers[i].wins;
+        winner = this.RRchallengers[i];
+      }
+    }
+    if (this.RRchallengers[0].wins == this.RRchallengers[1].wins && this.RRchallengers[1].wins==this.RRchallengers[2].wins) {
+      for (let i = 0; i < 3; i++) {
+        console.log(this.RRchallengers[i].getAcummulatedRounds())
+        if(this.RRchallengers[i].getAcummulatedRounds() > score){
+          score = this.RRchallengers[i].getAcummulatedRounds();
+          winner = this.RRchallengers[i];
+        }
+      }
+    }
+    console.log(winner.name);
+  }
+    #nextRRMatch(bracketName,trainer1,trainer2){
+    this.#matches[bracketName] = new Battle(bracketName,trainer1,trainer2);
+    this.#matches[bracketName].startBattle();
+  }
+}
+//end of RoundRobin Class
+
 //start of bracket stage
 class BracketStage{
   constructor(challengers){
@@ -691,56 +724,70 @@ class BracketStage{
     this.challengersCount = this.challengers.length;
   }
   #matches = [];
-  #winnersBracket =[];
-  #losersBracket=[];
+
   commenceBracketStage(){
     //procedural bracketing
     let bye;
-    if (this.challengersCount%2==0) {
+    let qualifiedToRR=[];
+    if (this.challengersCount==2) {
+      console.log("get");
+      this.#nextBracketStage('Battle',this.challengers[0],this.challengers[1]);
+    }else if (this.challengersCount==4) {
       this.challengersCount /= 2;
       for (let i = 0; i < this.challengersCount; i++) {
         let bracketName = `Bracket${i+1}`
         this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1])
       }
-      this.#nextBracketStage('loser Bracket',this.#losersBracket[0],this.#losersBracket[1]);
+      this.#nextBracketStage('Bracket3',this.#matches['Bracket1'].getloser(),this.#matches['Bracket2'].getloser());
+        
+      qualifiedToRR = [this.#matches['Bracket1'].getWinner(),this.#matches['Bracket2'].getWinner(),this.#matches['Bracket3'].getWinner()]
+    }else if(this.challengersCount==3){
+      qualifiedToRR = this.challengers;
     }else{
-      bye = this.challengers[challengers[challengers-1]]
-      this.challengersCount /= 2;
-      for (let i = 0; i < this.challengersCount; i++) {
+      bye = challengers[challengers.length-1];
+      console.log("bye",bye);
+      for (let i = 0; i < 2; i++) {
         let bracketName = `Bracket${i+1}`
-        this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1])
+        this.#nextBracketStage(bracketName,this.challengers[i*2],this.challengers[i*2+1]);
+        console.log(bracketName, `\nWinner: ${this.#matches[bracketName].getWinner().name} \nLoser: ${this.#matches[bracketName].getloser().name}`);
       }
+      this.#nextBracketStage('Bracket3',this.#matches['Bracket1'].getWinner(),bye);
+      console.log('Bracket3', `\nWinner: ${this.#matches['Bracket3'].getWinner().name} \nLoser: ${this.#matches['Bracket3'].getloser().name}`);
+
+      this.#nextBracketStage('Bracket4', this.#matches['Bracket1'].getloser(), this.#matches['Bracket2'].getloser());
+      console.log('Bracket4', `\nWinner: ${this.#matches['Bracket4'].getWinner().name} \nLoser: ${this.#matches['Bracket4'].getloser().name}`);
+
+      this.#nextBracketStage('Bracket5',this.#matches['Bracket4'].getWinner(),this.#matches['Bracket3'].getloser());
+      console.log('Bracket5', `\nWinner: ${this.#matches['Bracket5'].getWinner().name} \nLoser: ${this.#matches['Bracket5'].getloser().name}`);
+      
+      console.log(`RR: ${this.#matches['Bracket2'].getWinner().name + this.#matches['Bracket3'].getWinner().name + this.#matches['Bracket5'].getWinner().name}`);
+      qualifiedToRR = [this.#matches['Bracket2'].getWinner(),this.#matches['Bracket3'].getWinner(),this.#matches['Bracket5'].getWinner()]
     }
     console.log(this.#matches);
-    console.log(this.#winnersBracket);
-    console.log(this.#losersBracket); 
+    if (numberOfTrainers>2) {
+      let roundRobin = new RoundRobin(qualifiedToRR);
+      roundRobin.startRoundRobin();
+    }
   }
   #nextBracketStage(bracketName,trainer1,trainer2){
-      this.#matches[bracketName] = new Bracket(bracketName,trainer1,trainer2);
-      this.#matches[bracketName].commenceBattle();
-      this.#losersBracket.push(this.#matches[bracketName].getloser());
-      this.#winnersBracket.push(this.#matches[bracketName].getWinner());
+      this.#matches[bracketName] = new Battle(bracketName,trainer1,trainer2);
+      this.#matches[bracketName].startBattle();
+      // console.log("HEEE",this.#matches[bracketName].getloser().wins > 0);
+      // console.log("HEEE",this.#matches[bracketName].getWinner().losses > 0);
+      }
+      
+
+      // if (this.#matches[bracketName].getWinner().losses > 0) {
+      //   this.#losersBracket.slice(this.#losersBracket.indexOf(this.#matches[bracketName].getWinner()),1,0);
+      //   // console.log(bracketName,this.#winnersBracket.indexOf(this.#matches[bracketName].getWinner()));
+      // }
+      // if (this.#matches[bracketName].getloser().wins > 0) {
+      //   this.#winnersBracket.slice(this.#winnersBracket.indexOf(this.#matches[bracketName].getloser()),1,0);
+      //   // console.log(bracketName,this.#winnersBracket.indexOf(this.#matches[bracketName].getloser()));
+      // }
   }
-}
+
 
 let bracketStage = new BracketStage(challengers);
 bracketStage.commenceBracketStage();
 //end of bracket stage
-//start of RoundRobin Class
-class RoundRobin{
-  constructor(challengers){
-    this.challengers1 = challengers[0];
-    this.challengers2 = challengers[1];
-    this.challengers3 = challengers[2];
-  }
-  startRoundRobin(){
-    for (let i = 0; i < challengers.length; i++) {
-      for (let j = i + 1; j < challengers.length; j++) {
-          const team1 = teams[i];
-          const team2 = teams[j];
-          
-      }
-    }
-  }
-}
-//end of RoundRobin Class
